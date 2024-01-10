@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Display</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Product Display</h1>
+
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Popularity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here dynamically using JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Fetch JSON data programmatically
+        fetch('https://s3.amazonaws.com/open-to-cors/assignment.json')
+            .then(response => response.json())
+            .then(data => {
+                // Extract products from the "products" object
+                const products = Object.values(data.products);
+                // Sort products by descending popularity
+                const sortedProducts = products.sort((a, b) => b.popularity - a.popularity);
+
+                // Display data in the table
+                const tableBody = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+
+                sortedProducts.forEach(product => {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).textContent = product.title;
+                    row.insertCell(1).textContent = `$${parseFloat(product.price).toFixed(2)}`;
+                    row.insertCell(2).textContent = product.popularity;
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+
+</body>
+</html>
